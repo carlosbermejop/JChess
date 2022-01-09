@@ -38,6 +38,8 @@ public abstract class Piece {
         return this.piecePosition;
     }
 
+    public abstract Piece movePiece(Move move);
+
     public enum PieceType {
 
         PAWN("P") {

@@ -17,8 +17,9 @@ public class Board {
 
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
+    private final Player currentPlayer;
 
-    private Board(Builder builder) {
+    private Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard, Alliance.BLACK);
@@ -28,6 +29,8 @@ public class Board {
 
         this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
         this.blackPlayer = new BlackPlayer(this, blackStandardLegalMoves, whiteStandardLegalMoves);
+
+        this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
 
     private static Collection<Piece> calculateActivePieces(final List<Tile> gameBoard, final Alliance alliance) {
@@ -121,6 +124,8 @@ public class Board {
     public Player blackPlayer() {
         return this.blackPlayer;
     }
+
+    public Player currentPlayer() { return this.currentPlayer; }
 
     public Collection<Piece> getBlackPieces() {
         return this.blackPieces;
