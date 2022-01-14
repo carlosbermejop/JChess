@@ -20,7 +20,15 @@ public class Bishop extends Piece {
     public Bishop(final int piecePosition, final Alliance pieceAlliance) {
         super(PieceType.BISHOP,
                 piecePosition,
-                pieceAlliance);
+                pieceAlliance,
+                true);
+    }
+
+    public Bishop(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove) {
+        super(PieceType.BISHOP,
+                piecePosition,
+                pieceAlliance,
+                isFirstMove);
     }
 
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) {

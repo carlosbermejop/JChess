@@ -8,17 +8,20 @@ import java.util.Collection;
 
 public abstract class Piece {
 
-    protected final PieceType pieceType;
-    protected final int piecePosition;
-    protected final Alliance pieceAlliance;
-    protected final boolean isFirstMove;
+    final PieceType pieceType;
+    final int piecePosition;
+    final Alliance pieceAlliance;
+    private final boolean isFirstMove;
     private final int cachedHashCode;
 
-    Piece(final PieceType pieceType, final int piecePosition, final Alliance pieceAlliance) {
+    Piece(final PieceType pieceType,
+          final int piecePosition,
+          final Alliance pieceAlliance,
+          final boolean isFirstMove) {
         this.pieceType = pieceType;
         this.piecePosition = piecePosition;
         this.pieceAlliance = pieceAlliance;
-        this.isFirstMove = false;
+        this.isFirstMove = isFirstMove;
         this.cachedHashCode = computeHashCode();
     }
 

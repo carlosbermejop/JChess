@@ -5,6 +5,8 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.MajorMove;
+import com.chess.engine.board.Move.PawnAttackMove;
+import com.chess.engine.board.Move.PawnJump;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -19,7 +21,16 @@ public class Pawn extends Piece {
 
         super(PieceType.PAWN,
                 piecePosition,
-                pieceAlliance);
+                pieceAlliance,
+                true);
+    }
+
+    public Pawn(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove) {
+
+        super(PieceType.PAWN,
+                piecePosition,
+                pieceAlliance,
+                isFirstMove);
     }
 
     @Override
@@ -42,13 +53,13 @@ public class Pawn extends Piece {
             if (currentCandidateOffset == 8 && !board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
                 legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate)); // TODO: implement this PawnMove
             } else if (currentCandidateOffset == 16 && this.isFirstMove() &&
-                    (BoardUtils.SECOND_ROW[this.piecePosition] && this.pieceAlliance.isBlack()) ||
-                    (BoardUtils.SEVENTH_ROW[this.piecePosition] && this.pieceAlliance.isWhite())) {
+                    ((BoardUtils.SEVENTH_RANK[this.piecePosition] && this.pieceAlliance.isBlack()) ||
+                            (BoardUtils.SECOND_RANK[this.piecePosition] && this.pieceAlliance.isWhite()))) {
                 final int behindCandidateDestinationCandidate = this.piecePosition + (this.pieceAlliance.getDirection() * 8);
 
                 if (!board.getTile(behindCandidateDestinationCandidate).isTileOccupied() &&
                         !board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
-                    legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate)); // TODO: implement this PawnMove
+                    legalMoves.add(new PawnJump(board, this, candidateDestinationCoordinate));
                 }
             } else if (currentCandidateOffset == 7 &&
                     !((BoardUtils.EIGHTH_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
@@ -59,19 +70,25 @@ public class Pawn extends Piece {
                     final Piece pieceOnCandidate = board.getTile(candidateDestinationCoordinate).getPiece();
 
                     if (this.pieceAlliance != pieceOnCandidate.getPieceAlliance()) {
-                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate)); // TODO: add an attack move
+                        legalMoves.add(new PawnAttackMove(board,
+                                this,
+                                candidateDestinationCoordinate,
+                                pieceOnCandidate));
                     }
                 }
             } else if (currentCandidateOffset == 9 &&
+                    board.getTile(candidateDestinationCoordinate).isTileOccupied() &&
                     !((BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
                             (BoardUtils.EIGHTH_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack()))) {
-                if (board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
 
-                    final Piece pieceOnCandidate = board.getTile(candidateDestinationCoordinate).getPiece();
+                final Piece pieceOnCandidate = board.getTile(candidateDestinationCoordinate).getPiece();
 
-                    if (this.pieceAlliance != pieceOnCandidate.getPieceAlliance()) {
-                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate)); // TODO: add an attack move
-                    }
+                if (this.pieceAlliance != pieceOnCandidate.getPieceAlliance()) {
+                    legalMoves.add(new PawnAttackMove(board,
+                            this,
+                            candidateDestinationCoordinate,
+                            pieceOnCandidate));
+
                 }
             }
         }

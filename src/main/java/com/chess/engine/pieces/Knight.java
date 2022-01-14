@@ -21,7 +21,16 @@ public class Knight extends Piece {
 
         super(PieceType.KNIGHT,
                 piecePosition,
-                pieceAlliance);
+                pieceAlliance,
+                true);
+    }
+
+    public Knight(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove) {
+
+        super(PieceType.KNIGHT,
+                piecePosition,
+                pieceAlliance,
+                isFirstMove);
     }
 
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) {

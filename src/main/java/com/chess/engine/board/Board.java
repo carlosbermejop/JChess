@@ -19,6 +19,7 @@ public class Board {
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
+    private final Move transitionMove;
 
     private Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
@@ -32,6 +33,7 @@ public class Board {
         this.blackPlayer = new BlackPlayer(this, blackStandardLegalMoves, whiteStandardLegalMoves);
 
         this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
+        this.transitionMove = builder.transitionMove != null ? builder.transitionMove : Move.MoveFactory.getNullMove();
     }
 
     private static Collection<Piece> calculateActivePieces(final List<Tile> gameBoard, final Alliance alliance) {
@@ -56,6 +58,10 @@ public class Board {
             tiles[i] = Tile.createTile(i, builder.boardConfig.get(i));
         }
         return ImmutableList.copyOf(tiles);
+    }
+
+    public Move getTransitionMove() {
+        return this.transitionMove;
     }
 
     public static Board createStandardBoard() {
@@ -158,6 +164,7 @@ public class Board {
 
     public static class Builder {
 
+        public Move transitionMove;
         Map<Integer, Piece> boardConfig;
         Alliance nextMoveMaker;
         private Pawn enPassantPawn;
